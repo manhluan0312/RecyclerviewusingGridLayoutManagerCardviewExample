@@ -1,13 +1,11 @@
 package com.example.recyclerviewusinggridlayoutmanagercardviewexample.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recyclerviewusinggridlayoutmanagercardviewexample.R;
@@ -17,32 +15,47 @@ import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder>
     {
-        private Context context;
-        private List<User> userList;
 
-        public UserAdapter(Context context) {
-            this.context = context;
+        private final List<User> mListUser;
+
+        public UserAdapter(List<User> mListUser) {
+            this.mListUser = mListUser;
         }
 
-        public void SetData(List<User> list)
-        {
-              this.userList=list;
-              notifyDataSetChanged();
+        @Override
+        //ham quy dinh type hien thi
+        public int getItemViewType(int position) {
+            User user=mListUser.get(position);
+            return user.getTypeDisplay();
         }
-
-
 
         @Override
         public UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
         {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user,parent,false);
+            View view =null;
+
+            switch (viewType)
+            {
+                case User.TYPE_GRID:
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user_grid,parent,false);
+                    break;
+
+                case User.TYPE_LIST:
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user_list,parent,false);
+                    break;
+
+                case User.TYPE_STAGGER:
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user_stagger,parent,false);
+                    break;
+
+            }
             return new UserViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(UserAdapter.UserViewHolder holder, int position)
         {
-               User user =userList.get(position);
+               User user =mListUser.get(position);
                if(user==null){
                    return;
                }
@@ -52,17 +65,17 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
         @Override
         public int getItemCount() {
-            if(userList!=null)
+            if(mListUser!=null)
             {
-                return userList.size();
+                return mListUser.size();
             }
             return 0;
         }
 
-        public class UserViewHolder extends RecyclerView.ViewHolder {
+        public static class UserViewHolder extends RecyclerView.ViewHolder {
 
-            private ImageView img;
-            private TextView tv_ten;
+            private final ImageView img;
+            private final TextView tv_ten;
 
             public UserViewHolder(View itemView) {
 
